@@ -253,13 +253,13 @@ export default function ElectionsPage() {
                                                 <>
                                                     <button
                                                         onClick={() => handleEdit(el)}
-                                                        className="text-blue-600 hover:text-blue-800"
+                                                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 rounded-md px-3 mr-2 text-blue-600 hover:bg-blue-600 hover:text-white"
                                                     >
                                                         <Edit2 size={16}/>
                                                     </button>
                                                     <button
                                                         onClick={() => handleDelete(el)}
-                                                        className="text-red-600 hover:text-red-800"
+                                                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 rounded-md px-3 text-red-600 hover:bg-red-600 hover:text-white"
                                                     >
                                                         <Trash2 size={16}/>
                                                     </button>
