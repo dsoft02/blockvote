@@ -10,6 +10,7 @@ import VotersPage from "./pages/VotersPage";
 import {AdminProvider, AdminProtected, AdminContext} from "./AdminAuth";
 import AdminLogin from "./AdminLogin";
 import {toast} from "react-hot-toast";
+import {LogOut} from "lucide-react";
 import {handleError} from "../utils/handleError.js";
 
 function Topbar({onToggleSidebar}) {
@@ -45,10 +46,11 @@ function Topbar({onToggleSidebar}) {
 
                 {account && (
                     <button
-                        onClick={() => disconnectWallet()}
-                        className="md:hidden px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 text-sm"
+                        onClick={disconnectWallet}
+                        className="md:hidden flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-red-500 hover:text-white h-9 rounded-md px-3"
                     >
-                        Logout
+                        <LogOut className="h-4 w-4" />
+                        <span>Sign Out</span>
                     </button>
                 )}
             </div>
@@ -90,9 +92,10 @@ function Topbar({onToggleSidebar}) {
 
                     <button
                         onClick={disconnectWallet}
-                        className="hidden md:inline px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+                        className="hidden md:flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-red-500 hover:text-white h-9 rounded-md px-3"
                     >
-                        Logout
+                        <LogOut className="h-4 w-4" />
+                        <span>Sign Out</span>
                     </button>
                 </div>
             )}

@@ -1,3 +1,4 @@
+//src/utils/handleError.js
 export function handleError(err) {
     console.error("⚠️ Ethers Error:", err);
 
