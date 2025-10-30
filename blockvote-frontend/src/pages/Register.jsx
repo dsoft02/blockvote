@@ -1,37 +1,103 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import useContract from "../hooks/useContract";
 import toast from "react-hot-toast";
+import {ArrowLeft} from "lucide-react";
+import { handleError } from "../utils/handleError";
 
 export default function Register() {
-    const { contract, account } = useContract();
+    const {contract, account, connectWallet, isConnecting} = useContract();
     const [name, setName] = useState("");
     const [matricNo, setMatricNo] = useState("");
     const [loading, setLoading] = useState(false);
+    const [alert, setAlert] = useState({type: "", message: ""});
 
     async function handleRegister(e) {
         e.preventDefault();
-        if (!contract) return toast.error("Contract not connected.");
-        if (!account) return toast.error("Connect your wallet first.");
-        if (!name || !matricNo) return toast.error("Please fill all fields.");
+        setAlert({type: "", message: ""});
+
+        if (!contract || !account) {
+            setAlert({
+                type: "error",
+                message: "Please connect your wallet before registering ⚠️",
+            });
+            toast.error("Please connect your wallet first.");
+            return;
+        }
+
+        if (!name || !matricNo) {
+            toast.error("Please fill all fields.");
+            return;
+        }
 
         try {
             setLoading(true);
             const tx = await contract.registerVoter(name, matricNo);
             await tx.wait();
             toast.success("Registration submitted. Waiting for admin verification ✅");
+            setAlert({
+                type: "success",
+                message: "Registration successful! Waiting for admin verification ✅",
+            });
+
             setName("");
             setMatricNo("");
         } catch (err) {
             console.error(err);
-            toast.error(err.reason || err.message);
+            const errorMsg = handleError(err);
+            toast.error(errorMsg);
+            setAlert({
+                type: "error",
+                message: errorMsg || "Something went wrong during registration ❌",
+            });
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
     }
 
     return (
-        <div className="min-h-screen flex flex-col justify-center items-center bg-gray-50">
+        <div className="min-h-screen flex flex-col justify-center items-center bg-gray-50 px-4">
+            {/* Back to Home */}
+            <div className="w-full max-w-md mb-4 text-left">
+                <a
+                    href="/"
+                    className="text-sm text-primary hover:underline flex items-center gap-1"
+                >
+                    <ArrowLeft size={16} strokeWidth={2} className="h-4 w-4 mr-2"/>
+                    Back to Home
+                </a>
+            </div>
+
+            {/* Registration Card */}
             <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
                 <h1 className="text-2xl font-bold mb-6 text-center">Voter Registration</h1>
+
+                {/* Wallet not connected warning */}
+                {!account && (
+                    <div className="mb-4 p-3 rounded-md text-sm bg-yellow-50 text-yellow-700 border border-yellow-200">
+                        ⚠️ Wallet not connected.
+                        <button
+                            onClick={connectWallet}
+                            disabled={isConnecting}
+                            className="ml-2 px-2 py-1 bg-yellow-600 text-white rounded text-xs hover:bg-yellow-700 disabled:opacity-50"
+                        >
+                            {isConnecting ? "Connecting..." : "Connect Wallet"}
+                        </button>
+                    </div>
+                )}
+
+                {/* Inline Alerts */}
+                {alert.message && (
+                    <div
+                        className={`mb-4 p-3 rounded-md text-sm font-medium ${
+                            alert.type === "success"
+                                ? "bg-green-50 text-green-700 border border-green-200"
+                                : "bg-red-50 text-red-700 border border-red-200"
+                        }`}
+                    >
+                        {alert.message}
+                    </div>
+                )}
+
                 <form onSubmit={handleRegister} className="space-y-4">
                     <div>
                         <label className="block text-sm font-medium">Full Name</label>
@@ -57,8 +123,8 @@ export default function Register() {
 
                     <button
                         type="submit"
-                        disabled={loading}
-                        className="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 disabled:opacity-50"
+                        disabled={loading || !account}
+                        className="w-full bg-primary text-primary-foreground hover:bg-primary/90  py-2 rounded disabled:opacity-50"
                     >
                         {loading ? "Registering..." : "Register"}
                     </button>

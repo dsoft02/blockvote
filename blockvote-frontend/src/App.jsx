@@ -1,21 +1,41 @@
-import {Routes, Route} from "react-router-dom";
-import Home from "./pages/Home";
-import Register from "./pages/Register";
-import Login from "./pages/Login";
-import VotePage from "./pages/VotePage";
-import {Toaster} from "react-hot-toast";
+import {Routes, Route, useLocation} from "react-router-dom";
+import Navbar from "@/components/Navbar";
+import Home from "@/pages/Home";
+import VotingPage from "@/pages/VotingPage";
+import ResultPage from "@/pages/ResultPage";
+import BlockchainExplorer from "@/pages/BlockchainExplorer";
+import AdminDashboard from "@/admin/AdminDashboard";
+import Login from "@/pages/Login";
+import Register from "@/pages/Register";
 
-export default function App() {
+const App = () => {
+    const location = useLocation();
+
+    // Show navbar only on public/user pages
+    const showNavbar = ["/", "/voting", "/results", "/blockchain"].includes(location.pathname);
+
     return (
-        <div className="min-h-screen bg-gray-50 text-gray-900">
-            <Toaster position="top-right"/>
+        <div className="min-h-screen flex flex-col">
+            {showNavbar && <Navbar/>}
 
-            <Routes>
-                <Route path="/" element={<Home/>}/>
-                <Route path="/register" element={<Register/>}/>
-                <Route path="/login" element={<Login/>}/>
-                <Route path="/vote" element={<VotePage/>}/>
-            </Routes>
+            <main className="flex-1">
+                <Routes>
+                    {/* Public/User Pages */}
+                    <Route path="/" element={<Home/>}/>
+                    <Route path="/voting" element={<VotingPage/>}/>
+                    <Route path="/results" element={<ResultPage/>}/>
+                    <Route path="/blockchain" element={<BlockchainExplorer/>}/>
+
+                    {/* Auth Pages */}
+                    <Route path="/login" element={<Login/>}/>
+                    <Route path="/register" element={<Register/>}/>
+
+                    {/* Admin Section */}
+                    <Route path="/admin/*" element={<AdminDashboard/>}/>
+                </Routes>
+            </main>
         </div>
     );
-}
+};
+
+export default App;

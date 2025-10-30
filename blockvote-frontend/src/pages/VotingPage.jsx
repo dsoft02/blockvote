@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import useContract from "../hooks/useContract";
 
-export default function VotePage() {
+export default function VotingPage() {
     const { contract, account } = useContract();
     const [elections, setElections] = useState([]);
     const [candidates, setCandidates] = useState([]);

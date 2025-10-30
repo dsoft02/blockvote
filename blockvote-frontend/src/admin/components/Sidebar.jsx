@@ -4,7 +4,11 @@ import {NavLink} from "react-router-dom";
 
 export default function Sidebar({open, onClose}) {
     const linkClass = ({isActive}) =>
-        `block px-3 py-2 rounded ${isActive ? "bg-indigo-600 text-white" : "text-indigo-100 hover:bg-indigo-500/30"}`;
+        `block px-3 py-2 rounded transition ${
+            isActive
+                ? "bg-indigo-600 text-white"
+                : "text-indigo-100 hover:bg-indigo-500/30"
+        }`;
 
     return (
         <>
@@ -34,6 +38,7 @@ export default function Sidebar({open, onClose}) {
                 <nav className="flex-1 space-y-2">
                     <NavLink to="/admin/elections" className={linkClass}>🗳️ Elections</NavLink>
                     <NavLink to="/admin/candidates" className={linkClass}>👥 Candidates</NavLink>
+                    <NavLink to="/admin/voters" className={linkClass}>🧑‍💻 Voters</NavLink>
                     <NavLink to="/admin/results" className={linkClass}>📊 Results</NavLink>
                     <NavLink to="/admin/settings" className={linkClass}>⚙️ Settings</NavLink>
                 </nav>

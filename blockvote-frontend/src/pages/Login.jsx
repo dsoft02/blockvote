@@ -1,46 +1,117 @@
-import React, { useState } from "react";
+//src/pages/Login.jsx
+import React, {useState} from "react";
 import useContract from "../hooks/useContract";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import toast from "react-hot-toast";
+import {ArrowLeft} from "lucide-react";
+import {handleError} from "../utils/handleError";
 
 export default function Login() {
-    const { contract, account } = useContract();
+    const {contract, account, connectWallet, isConnecting} = useContract();
     const [matricNo, setMatricNo] = useState("");
     const [loading, setLoading] = useState(false);
+    const [alert, setAlert] = useState({type: "", message: ""});
     const navigate = useNavigate();
 
     async function handleLogin(e) {
         e.preventDefault();
-        if (!contract) return toast.error("Contract not connected.");
-        if (!account) return toast.error("Please connect your wallet.");
-        if (!matricNo) return toast.error("Enter your matric number.");
+        setAlert({type: "", message: ""});
+
+        if (!contract || !account) {
+            setAlert({
+                type: "error",
+                message: "Please connect your wallet before logging in ⚠️",
+            });
+            toast.error("Please connect your wallet first.");
+            return;
+        }
+
+        if (!matricNo) {
+            toast.error("Enter your matric number.");
+            return;
+        }
 
         try {
             setLoading(true);
             const voter = await contract.getVoter(account);
 
-            // Check if voter exists
             if (!voter.matricNo || voter.matricNo.trim() === "") {
-                toast.error("No voter record found for this wallet. Please register.");
+                const msg = "No voter record found for this wallet. Please register.";
+                toast.error(msg);
+                setAlert({type: "error", message: msg});
             } else if (voter.matricNo.toLowerCase() !== matricNo.toLowerCase()) {
-                toast.error("Matric number does not match your wallet record.");
+                const msg = "Matric number does not match your wallet record.";
+                toast.error(msg);
+                setAlert({type: "error", message: msg});
             } else if (!voter.isVerified) {
-                toast.error("Your registration has not been verified by the admin yet.");
+                const msg = "Your registration has not been verified by the admin yet.";
+                toast.error(msg);
+                setAlert({type: "error", message: msg});
             } else {
                 toast.success("Login successful ✅");
-                navigate("/vote");
+                setAlert({
+                    type: "success",
+                    message: "Login successful ✅ Redirecting...",
+                });
+                setTimeout(() => navigate("/vote"), 1500);
             }
         } catch (err) {
             console.error(err);
-            toast.error(err.reason || err.message);
+            const errorMsg = handleError(err);
+            toast.error(errorMsg);
+            setAlert({
+                type: "error",
+                message: errorMsg || "Login failed ❌",
+            });
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
     }
 
     return (
-        <div className="min-h-screen flex flex-col justify-center items-center bg-gray-50">
+        <div className="min-h-screen flex flex-col justify-center items-center bg-gray-50 px-4">
+            {/* Back to Home */}
+            <div className="w-full max-w-md mb-4 text-left">
+                <a
+                    href="/"
+                    className="text-sm text-primary hover:underline flex items-center gap-1"
+                >
+                    <ArrowLeft size={16} strokeWidth={2} className="h-4 w-4 mr-2"/>
+                    Back to Home
+                </a>
+            </div>
+
+            {/* Login Card */}
             <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
                 <h1 className="text-2xl font-bold mb-6 text-center">Voter Login</h1>
+
+                {/* Wallet not connected warning */}
+                {!account && (
+                    <div className="mb-4 p-3 rounded-md text-sm bg-yellow-50 text-yellow-700 border border-yellow-200">
+                        ⚠️ Wallet not connected.
+                        <button
+                            onClick={connectWallet}
+                            disabled={isConnecting}
+                            className="ml-2 px-2 py-1 bg-yellow-600 text-white rounded text-xs hover:bg-yellow-700 disabled:opacity-50"
+                        >
+                            {isConnecting ? "Connecting..." : "Connect Wallet"}
+                        </button>
+                    </div>
+                )}
+
+                {/* Inline Alerts */}
+                {alert.message && (
+                    <div
+                        className={`mb-4 p-3 rounded-md text-sm font-medium ${
+                            alert.type === "success"
+                                ? "bg-green-50 text-green-700 border border-green-200"
+                                : "bg-red-50 text-red-700 border border-red-200"
+                        }`}
+                    >
+                        {alert.message}
+                    </div>
+                )}
+
                 <form onSubmit={handleLogin} className="space-y-4">
                     <div>
                         <label className="block text-sm font-medium">Matric Number</label>
@@ -55,8 +126,8 @@ export default function Login() {
 
                     <button
                         type="submit"
-                        disabled={loading}
-                        className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 disabled:opacity-50"
+                        disabled={loading || !account}
+                        className="w-full bg-primary text-primary-foreground hover:bg-primary/90  py-2 rounded disabled:opacity-50"
                     >
                         {loading ? "Validating..." : "Login"}
                     </button>
