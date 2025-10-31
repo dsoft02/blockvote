@@ -182,7 +182,8 @@ export default function ElectionsPage() {
 
                 {/* Manage Elections */}
                 <div className="bg-white p-6 rounded-lg border shadow-sm">
-                    <div className="flex items-center justify-between mb-4">
+                    <div
+                        className="flex flex-col md:flex-row md:items-center md:justify-between mb-4 space-y-3 md:space-y-0">
                         <div>
                             <h2 className="text-2xl font-semibold leading-none tracking-tight">Manage Elections</h2>
                             <p className="text-sm text-muted-foreground">Create and manage voting elections</p>
@@ -194,7 +195,7 @@ export default function ElectionsPage() {
                                     setForm({title: "", description: "", start: "", end: ""});
                                     setModalOpen(true);
                                 }}
-                                className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
+                                className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg w-full md:w-auto justify-center"
                             >
                                 <Plus size={18}/> Create Election
                             </button>
@@ -208,69 +209,71 @@ export default function ElectionsPage() {
                             first
                             election to get started.</div>
                     ) : (
-                        <table className="min-w-full text-sm border-t border-gray-100">
-                            <thead className="bg-gray-50 text-gray-700">
-                            <tr>
-                                <th className="px-4 py-2 text-left">Title</th>
-                                <th className="px-4 py-2 text-left">Status</th>
-                                <th className="px-4 py-2 text-left">Start Date</th>
-                                <th className="px-4 py-2 text-left">End Date</th>
-                                <th className="px-4 py-2 text-left">Actions</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {elections.map((el) => {
-                                const status =
-                                    el.start > now
-                                        ? "Pending"
-                                        : el.end < now
-                                            ? "Completed"
-                                            : "Active";
-                                return (
-                                    <tr key={el.id} className="border-b hover:bg-gray-50">
-                                        <td className="px-4 py-2 font-medium">{el.title}</td>
-                                        <td className="px-4 py-2">
-                                            <span
-                                                className={`px-2 py-1 rounded-lg text-xs font-semibold ${
-                                                    status === "Active"
-                                                        ? "bg-green-100 text-green-700"
-                                                        : status === "Completed"
-                                                            ? "bg-gray-200 text-gray-700"
-                                                            : "bg-orange-100 text-orange-700"
-                                                }`}
-                                            >
-                                                {status}
-                                            </span>
-                                        </td>
-                                        <td className="px-4 py-2">
-                                            {format(new Date(el.start * 1000), "MM/dd/yyyy")}
-                                        </td>
-                                        <td className="px-4 py-2">
-                                            {format(new Date(el.end * 1000), "MM/dd/yyyy")}
-                                        </td>
-                                        <td className="px-4 py-2 flex items-center gap-3">
-                                            {isOwner && (el.start > now || el.candidateCount === 0) && (
-                                                <>
-                                                    <button
-                                                        onClick={() => handleEdit(el)}
-                                                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 rounded-md px-3 mr-2 text-blue-600 hover:bg-blue-600 hover:text-white"
-                                                    >
-                                                        <Edit2 size={16}/>
-                                                    </button>
-                                                    <button
-                                                        onClick={() => handleDelete(el)}
-                                                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 rounded-md px-3 text-red-600 hover:bg-red-600 hover:text-white"
-                                                    >
-                                                        <Trash2 size={16}/>
-                                                    </button>
-                                                </>
-                                            )}
-                                        </td>
-                                    </tr>
-                                );
-                            })}
-                            </tbody>
-                        </table>
+                        <div className="relative w-full overflow-auto">
+                            <table className="min-w-full text-sm border-t border-gray-100">
+                                <thead className="bg-gray-50 text-gray-700">
+                                <tr>
+                                    <th className="px-4 py-2 text-left">Title</th>
+                                    <th className="px-4 py-2 text-left">Status</th>
+                                    <th className="px-4 py-2 text-left">Start Date</th>
+                                    <th className="px-4 py-2 text-left">End Date</th>
+                                    <th className="px-4 py-2 text-left">Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {elections.map((el) => {
+                                    const status =
+                                        el.start > now
+                                            ? "Pending"
+                                            : el.end < now
+                                                ? "Completed"
+                                                : "Active";
+                                    return (
+                                        <tr key={el.id} className="border-b hover:bg-gray-50">
+                                            <td className="px-4 py-2 font-medium">{el.title}</td>
+                                            <td className="px-4 py-2">
+                                                <span
+                                                    className={`px-2 py-1 rounded-lg text-xs font-semibold ${
+                                                        status === "Active"
+                                                            ? "bg-green-100 text-green-700"
+                                                            : status === "Completed"
+                                                                ? "bg-gray-200 text-gray-700"
+                                                                : "bg-orange-100 text-orange-700"
+                                                    }`}
+                                                >
+                                                    {status}
+                                                </span>
+                                            </td>
+                                            <td className="px-4 py-2">
+                                                {format(new Date(el.start * 1000), "MM/dd/yyyy")}
+                                            </td>
+                                            <td className="px-4 py-2">
+                                                {format(new Date(el.end * 1000), "MM/dd/yyyy")}
+                                            </td>
+                                            <td className="px-4 py-2 flex items-center gap-3">
+                                                {isOwner && (el.start > now || el.candidateCount === 0) && (
+                                                    <>
+                                                        <button
+                                                            onClick={() => handleEdit(el)}
+                                                            className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 rounded-md px-3 mr-2 text-blue-600 hover:bg-blue-600 hover:text-white"
+                                                        >
+                                                            <Edit2 size={16}/>
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleDelete(el)}
+                                                            className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 rounded-md px-3 text-red-600 hover:bg-red-600 hover:text-white"
+                                                        >
+                                                            <Trash2 size={16}/>
+                                                        </button>
+                                                    </>
+                                                )}
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
+                                </tbody>
+                            </table>
+                        </div>
                     )}
                 </div>
             </div>

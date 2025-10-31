@@ -39,7 +39,7 @@ export default function Login() {
                 const msg = "No voter record found for this wallet. Please register.";
                 toast.error(msg);
                 setAlert({type: "error", message: msg});
-            } else if (voter.matricNo.toLowerCase() !== matricNo.toLowerCase()) {
+            } else if (voter.matricNo.toLowerCase() !== matricNo.toLowerCase().trim()) {
                 const msg = "Matric number does not match your wallet record.";
                 toast.error(msg);
                 setAlert({type: "error", message: msg});
@@ -53,7 +53,7 @@ export default function Login() {
                     type: "success",
                     message: "Login successful ✅ Redirecting...",
                 });
-                setTimeout(() => navigate("/vote"), 1500);
+                setTimeout(() => navigate("/voting"), 1500);
             }
         } catch (err) {
             console.error(err);

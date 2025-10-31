@@ -81,48 +81,50 @@ export default function VotersPage() {
             ) : filteredVoters.length === 0 ? (
                 <p className="text-gray-600">No voters found for this filter.</p>
             ) : (
-                <table className="w-full border border-gray-200 rounded-lg overflow-hidden">
-                    <thead className="bg-gray-100">
-                    <tr>
-                        <th className="px-4 py-2 text-left">Name</th>
-                        <th className="px-4 py-2 text-left">Matric No</th>
-                        <th className="px-4 py-2 text-left">Wallet</th>
-                        <th className="px-4 py-2 text-left">Status</th>
-                        <th className="px-4 py-2 text-left">Action</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {filteredVoters.map((v, idx) => (
-                        <tr key={idx} className="border-t hover:bg-gray-50">
-                            <td className="px-4 py-2">{v.name}</td>
-                            <td className="px-4 py-2">{v.matricNo}</td>
-                            <td className="px-4 py-2 font-mono text-sm">{shortAddr(v.wallet)}</td>
-                            <td className="px-4 py-2">
-                                {v.isVerified ? (
-                                    <span className="text-green-600 font-medium">✅ Verified</span>
-                                ) : (
-                                    <span className="text-yellow-600 font-medium">⏳ Pending</span>
-                                )}
-                            </td>
-                            <td className="px-4 py-2">
-                                {!v.isVerified && (
-                                    <button
-                                        onClick={() => verifyVoter(v.wallet)}
-                                        disabled={processing === v.wallet}
-                                        className={`px-4 py-1.5 rounded text-white ${
-                                            processing === v.wallet
-                                                ? "bg-gray-400"
-                                                : "bg-indigo-600 hover:bg-indigo-700"
-                                        }`}
-                                    >
-                                        {processing === v.wallet ? "Verifying..." : "Verify"}
-                                    </button>
-                                )}
-                            </td>
+                <div className="relative w-full overflow-auto">
+                    <table className="w-full border border-gray-200 rounded-lg overflow-hidden">
+                        <thead className="bg-gray-100">
+                        <tr>
+                            <th className="px-4 py-2 text-left">Name</th>
+                            <th className="px-4 py-2 text-left">Matric No</th>
+                            <th className="px-4 py-2 text-left">Wallet</th>
+                            <th className="px-4 py-2 text-left">Status</th>
+                            <th className="px-4 py-2 text-left">Action</th>
                         </tr>
-                    ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                        {filteredVoters.map((v, idx) => (
+                            <tr key={idx} className="border-t hover:bg-gray-50">
+                                <td className="px-4 py-2">{v.name}</td>
+                                <td className="px-4 py-2">{v.matricNo}</td>
+                                <td className="px-4 py-2 font-mono text-sm">{shortAddr(v.wallet)}</td>
+                                <td className="px-4 py-2">
+                                    {v.isVerified ? (
+                                        <span className="text-green-600 font-medium">✅ Verified</span>
+                                    ) : (
+                                        <span className="text-yellow-600 font-medium">⏳ Pending</span>
+                                    )}
+                                </td>
+                                <td className="px-4 py-2">
+                                    {!v.isVerified && (
+                                        <button
+                                            onClick={() => verifyVoter(v.wallet)}
+                                            disabled={processing === v.wallet}
+                                            className={`px-4 py-1.5 rounded text-white ${
+                                                processing === v.wallet
+                                                    ? "bg-gray-400"
+                                                    : "bg-indigo-600 hover:bg-indigo-700"
+                                            }`}
+                                        >
+                                            {processing === v.wallet ? "Verifying..." : "Verify"}
+                                        </button>
+                                    )}
+                                </td>
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>
+                </div>
             )}
         </div>
     );

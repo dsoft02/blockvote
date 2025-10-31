@@ -194,14 +194,14 @@ export default function CandidatesPage() {
     return (
         <div className="space-y-6">
             {/* Page header */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4 space-y-3 md:space-y-0">
                 <div>
                     <h1 className="text-2xl font-bold">Candidate Management</h1>
                     <p className="text-sm text-gray-500">Manage election candidates</p>
                 </div>
                 <button
                     onClick={openAddModal}
-                    className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
+                    className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg w-full md:w-auto justify-center"
                 >
                     <Plus size={18}/> Add Candidate
                 </button>
@@ -209,17 +209,18 @@ export default function CandidatesPage() {
 
             {/* Card */}
             <div className="bg-white p-6 rounded-lg border shadow-sm">
-                <div className="flex justify-between items-center mb-4">
+                <div
+                    className="flex flex-col md:flex-row md:items-center md:justify-between mb-4 space-y-3 md:space-y-0">
                     <div className="flex flex-col">
                         <h3 className="text-2xl font-semibold leading-none tracking-tight">All Candidates</h3>
                         <p className="text-sm text-muted-foreground">View and manage all candidates</p>
                     </div>
 
-                    <div>
+                    <div className="w-full md:w-auto">
                         <select
                             value={selectedElectionFilter}
                             onChange={(e) => setSelectedElectionFilter(e.target.value)}
-                            className="p-2 border rounded-md"
+                            className="p-2 border rounded-md w-full md:w-auto"
                         >
                             <option value="">All Elections</option>
                             {elections.map((e) => (
@@ -237,51 +238,53 @@ export default function CandidatesPage() {
                 ) : candidates.length === 0 ? (
                     <div className="text-center py-8 text-muted-foreground">No candidates found</div>
                 ) : (
-                    <table className="min-w-full text-sm border-t border-gray-100">
-                        <thead className="bg-gray-50 text-gray-700">
-                        <tr>
-                            <th className="px-4 py-2 text-left">Candidate Name</th>
-                            <th className="px-4 py-2 text-left">Election</th>
-                            <th className="px-4 py-2 text-left">Votes</th>
-                            <th className="px-4 py-2 text-left">Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {candidates.map((c) => {
-                            return (
-                                <tr key={`${c.electionId}-${c.id}`} className="border-b hover:bg-gray-50">
-                                    <td className="px-4 py-2 font-medium">{c.name}</td>
-                                    <td className="px-4 py-2">{c.electionTitle}</td>
-                                    <td className="px-4 py-2">{c.votes}</td>
-                                    <td className="px-4 py-2 flex gap-2">
-                                        <button
-                                            onClick={() => openEditModal(c)}
-                                            disabled={c.isLocked}
-                                            className={`inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 rounded-md px-3 ${
-                                                c.isLocked
-                                                    ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                                                    : "text-blue-600 hover:bg-blue-600 hover:text-white"
-                                            }`}
-                                        >
-                                            <Pencil size={16}/>
-                                        </button>
-                                        <button
-                                            onClick={() => handleDeleteCandidate(c)}
-                                            disabled={c.isLocked}
-                                            className={`inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 rounded-md px-3 ${
-                                                c.isLocked
-                                                    ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                                                    : "text-red-600 hover:bg-red-600 hover:text-white"
-                                            }`}
-                                        >
-                                            <Trash2 size={16}/>
-                                        </button>
-                                    </td>
-                                </tr>
-                            );
-                        })}
-                        </tbody>
-                    </table>
+                    <div className="relative w-full overflow-auto">
+                        <table className="min-w-full text-sm border-t border-gray-100">
+                            <thead className="bg-gray-50 text-gray-700">
+                            <tr>
+                                <th className="px-4 py-2 text-left">Candidate Name</th>
+                                <th className="px-4 py-2 text-left">Election</th>
+                                <th className="px-4 py-2 text-left">Votes</th>
+                                <th className="px-4 py-2 text-left">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {candidates.map((c) => {
+                                return (
+                                    <tr key={`${c.electionId}-${c.id}`} className="border-b hover:bg-gray-50">
+                                        <td className="px-4 py-2 font-medium">{c.name}</td>
+                                        <td className="px-4 py-2">{c.electionTitle}</td>
+                                        <td className="px-4 py-2">{c.votes}</td>
+                                        <td className="px-4 py-2 flex gap-2">
+                                            <button
+                                                onClick={() => openEditModal(c)}
+                                                disabled={c.isLocked}
+                                                className={`inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 rounded-md px-3 ${
+                                                    c.isLocked
+                                                        ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                                                        : "text-blue-600 hover:bg-blue-600 hover:text-white"
+                                                }`}
+                                            >
+                                                <Pencil size={16}/>
+                                            </button>
+                                            <button
+                                                onClick={() => handleDeleteCandidate(c)}
+                                                disabled={c.isLocked}
+                                                className={`inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 rounded-md px-3 ${
+                                                    c.isLocked
+                                                        ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                                                        : "text-red-600 hover:bg-red-600 hover:text-white"
+                                                }`}
+                                            >
+                                                <Trash2 size={16}/>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                            </tbody>
+                        </table>
+                    </div>
                 )}
             </div>
 

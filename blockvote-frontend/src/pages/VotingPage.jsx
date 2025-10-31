@@ -45,7 +45,7 @@ export default function VotingPage() {
     }
 
     return (
-        <div className="p-6 max-w-5xl mx-auto">
+        <div className="container py-6 mx-auto">
             <h1 className="text-2xl font-bold mb-4">Elections</h1>
             {elections.map(e => (
                 <div key={e.id} className="border p-3 mb-3 rounded">
