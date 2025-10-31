@@ -13,33 +13,41 @@ async function main() {
     const now = Math.floor(Date.now() / 1000);
     const day = 24 * 60 * 60;
 
-    console.log("🗳️ Creating Departmental President election...");
-    let tx = await election.createElection(
-        "Departmental President",
-        "Election for the Departmental President 2025",
-        now,
-        now + day
-    );
+  const electionsToSeed = [
+    {
+      title: "Departmental President",
+      description: "Election for the Departmental President 2025",
+      candidates: ["Alice Johnson", "Bob Smith", "Charlie Brown"],
+    },
+    {
+      title: "Departmental Secretary",
+      description: "Election for Departmental Secretary 2025",
+      candidates: ["Grace Adams", "John Doe", "Mary Smith"],
+    },
+    {
+      title: "Class Representative",
+      description: "Election for Class Representative of Computer Science 2025",
+      candidates: ["David Okoro", "Emma Williams", "Femi Adeyemi"],
+    },
+    {
+      title: "Social/Events Coordinator",
+      description: "Election for Social and Events Coordinator 2025",
+      candidates: ["Helen Brown", "Ibrahim Musa", "Joyce Nwankwo"],
+    },
+  ];
+
+  for (const e of electionsToSeed) {
+    console.log(`Creating election: ${e.title}...`);
+    let tx = await election.createElection(e.title, e.description, now, now + day);
     await tx.wait();
 
-    console.log("🧑‍💼 Adding candidates to Departmental President...");
-    await (await election.addCandidate(1, "Alice Johnson")).wait();
-    await (await election.addCandidate(1, "Bob Smith")).wait();
-    await (await election.addCandidate(1, "Charlie Brown")).wait();
-
-    console.log("🗳️ Creating Departmental Secretary election...");
-    tx = await election.createElection(
-        "Departmental Secretary",
-        "Election for Departmental Secretary 2025",
-        now,
-        now + day
-    );
+    const electionCount = (await election.electionCount()).toNumber();
+    console.log(`Adding candidates to ${e.title}...`);
+    for (const name of e.candidates) {
+      tx = await election.addCandidate(electionCount, name);
     await tx.wait();
-
-    console.log("🧑‍💼 Adding candidates to Departmental Secretary...");
-    await (await election.addCandidate(2, "Grace Adams")).wait();
-    await (await election.addCandidate(2, "John Doe")).wait();
-    await (await election.addCandidate(2, "Mary Smith")).wait();
+    }
+  }
 
     console.log("Seeding completed successfully!");
 }

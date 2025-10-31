@@ -13,14 +13,15 @@ const Hero = () => {
                 Secured by Blockchain Technology
             </div>
 
-            <h1 className="text-4xl md:text-6xl font-extrabold text-gray-900 mb-4">
+            <h1 className="text-4xl md:text-6xl font-extrabold text-gray-900 mb-2">
                 Blockchain <span className="text-blue-600">Voting System</span>
             </h1>
+            <h3 className="text-2xl text-gray-900 mb-2">
+                A Final Year Project by{" "}
+                <span className="font-extrabold text-3xl  text-gray-900">BOLU OMOLOLA</span> <span className="font-bold">(FPA/CS/23/3-0123)</span>
+            </h3>
 
             <p className="text-gray-600 max-w-2xl text-base md:text-lg mb-6">
-                A Final Year Project by{" "}
-                <span className="font-semibold text-gray-800">BOLU OMOLOLA</span> (FPA/CS/23/3-0123)
-                <br/>
                 Department of Computer Science, Federal Polytechnic, Ado-Ekiti.
             </p>
 
