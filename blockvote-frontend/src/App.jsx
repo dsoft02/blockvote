@@ -11,7 +11,6 @@ import Register from "@/pages/Register";
 const App = () => {
     const location = useLocation();
 
-    // Show navbar only on public/user pages
     const showNavbar = ["/", "/voting", "/results", "/blockchain"].includes(location.pathname);
 
     return (

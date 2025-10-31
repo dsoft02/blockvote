@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import ElectionManager from "../abis/ElectionManager.json";
 import {handleError} from "../utils/handleError";
 
-const CONTRACT_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS;
 
 let currentAccount = null;
 let isConnectingGlobal = false;
@@ -80,14 +80,27 @@ export default function useContract() {
             if (accs.length > 0) {
                 const s = await p.getSigner();
                 const c = new ethers.Contract(CONTRACT_ADDRESS, ElectionManager.abi, s);
+                const addr = accs[0].address;
+
+                try {
+                    const voter = await c.voters(addr);
+                    if (!voter.isRegistered) {
+                        console.warn("User is not a registered voter anymore. Skipping reconnect.");
+                        return;
+                    }
+                } catch (err) {
+                    console.error("Error checking voter status:", err);
+                    return;
+                }
+
                 setProvider(p);
                 setSigner(s);
                 setContract(c);
-                setAccount(accs[0].address);
+                setAccount(addr);
 
-                if (currentAccount !== accs[0].address) {
-                    toast.success(`🔗 Reconnected: ${accs[0].address.slice(0, 6)}...${accs[0].address.slice(-4)}`);
-                    currentAccount = accs[0].address;
+                if (currentAccount !== addr) {
+                    toast.success(`🔗 Reconnected: ${addr.slice(0, 6)}...${addr.slice(-4)}`);
+                    currentAccount = addr;
                 }
             }
         };
