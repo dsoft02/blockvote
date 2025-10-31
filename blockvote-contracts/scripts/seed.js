@@ -7,7 +7,7 @@ async function main() {
 
     const election = await ethers.getContractAt(
         "ElectionManager",
-        "0x5FbDB2315678afecb367f032d93F642f64180aa3" // ✅ your deployed address
+        "0x5FbDB2315678afecb367f032d93F642f64180aa3"
     );
 
     const now = Math.floor(Date.now() / 1000);
@@ -41,7 +41,7 @@ async function main() {
     await (await election.addCandidate(2, "John Doe")).wait();
     await (await election.addCandidate(2, "Mary Smith")).wait();
 
-    console.log("✅ Seeding completed successfully!");
+    console.log("Seeding completed successfully!");
 }
 
 main().catch((error) => {

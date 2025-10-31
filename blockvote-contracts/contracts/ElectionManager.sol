@@ -1,4 +1,4 @@
-
+//contracts/ElectionManager.sol
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
@@ -95,6 +95,31 @@ contract ElectionManager {
         emit ElectionCreated(electionCount, _title);
     }
 
+    function updateElection(
+        uint _electionId,
+        string memory _title,
+        string memory _description,
+        uint _startTime,
+        uint _endTime
+    ) public onlyAdmin electionExists(_electionId) {
+        Election storage e = elections[_electionId];
+        require(block.timestamp < e.startTime, "Election already started");
+        require(_endTime > _startTime, "Invalid time range");
+
+        e.title = _title;
+        e.description = _description;
+        e.startTime = _startTime;
+        e.endTime = _endTime;
+    }
+
+    function deleteElection(uint _electionId) public onlyAdmin electionExists(_electionId) {
+        Election storage e = elections[_electionId];
+        require(block.timestamp < e.startTime, "Election already started");
+        require(e.candidateCount == 0, "Election already has candidates");
+
+        delete elections[_electionId];
+    }
+
     function addCandidate(uint _electionId, string memory _name) public onlyAdmin electionExists(_electionId) {
         require(bytes(_name).length > 0, "Candidate name required");
         Election storage e = elections[_electionId];
@@ -108,6 +133,35 @@ contract ElectionManager {
         emit CandidateAdded(_electionId, e.candidateCount, _name);
     }
 
+    function updateCandidate(
+        uint _electionId,
+        uint _candidateId,
+        string memory _name
+    ) public onlyAdmin electionExists(_electionId) {
+        require(bytes(_name).length > 0, "Candidate name required");
+
+        Election storage e = elections[_electionId];
+        require(block.timestamp < e.startTime, "Cannot edit election already started");
+        require(_candidateId > 0 && _candidateId <= e.candidateCount, "Invalid candidate");
+
+        e.candidates[_candidateId].name = _name;
+    }
+
+    function deleteCandidate(uint _electionId, uint _candidateId) public onlyAdmin electionExists(_electionId) {
+        Election storage e = elections[_electionId];
+        require(block.timestamp < e.startTime, "Cannot delete election already started");
+        require(_candidateId > 0 && _candidateId <= e.candidateCount, "Invalid candidate");
+
+        // shift candidates down to maintain contiguous IDs
+        for (uint i = _candidateId; i < e.candidateCount; i++) {
+            e.candidates[i] = e.candidates[i + 1];
+            e.candidates[i].id = i; // update id
+        }
+
+        delete e.candidates[e.candidateCount];
+        e.candidateCount--;
+    }
+
     function verifyVoter(address _voterAddr) public onlyAdmin {
         Voter storage v = voters[_voterAddr];
         require(bytes(v.matricNo).length > 0, "Voter not registered");
@@ -116,9 +170,9 @@ contract ElectionManager {
     }
 
     function endElectionEarly(uint _electionId)
-        public
-        onlyAdmin
-        electionExists(_electionId)
+    public
+    onlyAdmin
+    electionExists(_electionId)
     {
         Election storage e = elections[_electionId];
         require(block.timestamp < e.endTime, "Election already ended");
@@ -214,6 +268,21 @@ contract ElectionManager {
         return list;
     }
 
+    function getCandidatesWithLock(uint _electionId)
+    public
+    view
+    electionExists(_electionId)
+    returns (Candidate[] memory, bool electionLocked)
+    {
+        Election storage e = elections[_electionId];
+        Candidate[] memory list = new Candidate[](e.candidateCount);
+        for (uint i = 1; i <= e.candidateCount; i++) {
+            list[i - 1] = e.candidates[i];
+        }
+        bool locked = block.timestamp >= e.startTime && block.timestamp <= e.endTime || block.timestamp > e.endTime;
+        return (list, locked);
+    }
+
     function getResults(uint _electionId)
     public
     view
@@ -276,4 +345,13 @@ contract ElectionManager {
     function hasVoterVoted(address _wallet) public view returns (bool) {
         return voters[_wallet].hasVoted;
     }
+
+    function hasVotedInElection(uint _electionId, address _wallet)
+    public
+    view
+    returns (bool)
+    {
+        return elections[_electionId].hasVoted[_wallet];
+    }
+
 }
