@@ -38,7 +38,7 @@ export default function VotersPage() {
             setProcessing(wallet);
             const tx = await contract.verifyVoter(wallet);
             await tx.wait();
-            toast.success(`Voter ${wallet.slice(0, 6)}... verified ✅`);
+            toast.success(`Voter ${wallet.slice(0, 6)}... verified`);
             fetchVoters();
         } catch (err) {
             console.error(err);
@@ -100,9 +100,9 @@ export default function VotersPage() {
                                 <td className="px-4 py-2 font-mono text-sm">{shortAddr(v.wallet)}</td>
                                 <td className="px-4 py-2">
                                     {v.isVerified ? (
-                                        <span className="text-green-600 font-medium">✅ Verified</span>
+                                        <span className="text-green-600 font-medium">Verified</span>
                                     ) : (
-                                        <span className="text-yellow-600 font-medium">⏳ Pending</span>
+                                        <span className="text-yellow-600 font-medium">Pending</span>
                                     )}
                                 </td>
                                 <td className="px-4 py-2">

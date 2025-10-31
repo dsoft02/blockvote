@@ -127,13 +127,13 @@ export default function CandidatesPage() {
                 toast.loading("Updating candidate...");
                 await tx.wait();
                 toast.dismiss();
-                toast.success("✅ Candidate updated successfully!");
+                toast.success("Candidate updated successfully!");
             } else {
                 const tx = await contract.addCandidate(parseInt(form.electionId), form.name);
                 toast.loading("Adding candidate...");
                 await tx.wait();
                 toast.dismiss();
-                toast.success("✅ Candidate added successfully!");
+                toast.success("Candidate added successfully!");
             }
             setModalOpen(false);
             setForm({name: "", electionId: ""});
@@ -193,7 +193,6 @@ export default function CandidatesPage() {
 
     return (
         <div className="space-y-6">
-            {/* Page header */}
             <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4 space-y-3 md:space-y-0">
                 <div>
                     <h1 className="text-2xl font-bold">Candidate Management</h1>
@@ -207,7 +206,6 @@ export default function CandidatesPage() {
                 </button>
             </div>
 
-            {/* Card */}
             <div className="bg-white p-6 rounded-lg border shadow-sm">
                 <div
                     className="flex flex-col md:flex-row md:items-center md:justify-between mb-4 space-y-3 md:space-y-0">
@@ -232,7 +230,6 @@ export default function CandidatesPage() {
                     </div>
                 </div>
 
-                {/* Candidate table */}
                 {loading ? (
                     <div className="text-gray-500">Loading candidates...</div>
                 ) : candidates.length === 0 ? (
@@ -288,7 +285,6 @@ export default function CandidatesPage() {
                 )}
             </div>
 
-            {/* Modal */}
             {modalOpen && (
                 <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
                     <div className="bg-white w-full max-w-lg rounded-lg shadow-lg p-6 relative">

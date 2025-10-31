@@ -75,11 +75,11 @@ function Topbar({onToggleSidebar}) {
                     <div className="truncate max-w-[180px] md:max-w-none">
                         {isOwner ? (
                             <span className="text-green-600 font-medium">
-                ✅ {account.slice(0, 6)}...{account.slice(-4)} (Owner)
+                {account.slice(0, 6)}...{account.slice(-4)} (Owner)
               </span>
                         ) : (
                             <span className="text-red-500 font-medium">
-                ⚠️ {account.slice(0, 6)}...{account.slice(-4)} (Not Owner)
+                {account.slice(0, 6)}...{account.slice(-4)} (Not Owner)
               </span>
                         )}
                     </div>

@@ -29,11 +29,11 @@ export default function AdminLogin() {
                     </button>
                 ) : !isOwner ? (
                     <div className="text-red-500 text-sm">
-                        ❌ Access denied — not the contract owner.
+                        Access denied — not the contract owner.
                     </div>
                 ) : (
                     <div className="text-green-600 font-medium">
-                        ✅ Verified owner, redirecting...
+                        Verified owner, redirecting...
                     </div>
                 )}
             </div>

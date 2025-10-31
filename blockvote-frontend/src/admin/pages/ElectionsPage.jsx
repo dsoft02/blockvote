@@ -72,7 +72,7 @@ export default function ElectionsPage() {
                 const tx = await contract.createElection(form.title, form.description, startTs, endTs);
                 setStatus("Creating election...");
                 await tx.wait();
-                toast.success("✅ Election created successfully!");
+                toast.success("Election created successfully!");
             }
 
             setModalOpen(false);
@@ -171,16 +171,13 @@ export default function ElectionsPage() {
 
     return (
         <>
-            {/* Main content */}
             <div className="space-y-6">
-                {/* Dashboard Summary */}
                 <div className="grid sm:grid-cols-3 gap-4">
                     <SummaryCard title="Total Elections" value={totalElections} subtitle="All time"/>
                     <SummaryCard title="Active Elections" value={activeElections} subtitle="Currently running"/>
                     <SummaryCard title="Completed Elections" value={completedElections} subtitle="Finished"/>
                 </div>
 
-                {/* Manage Elections */}
                 <div className="bg-white p-6 rounded-lg border shadow-sm">
                     <div
                         className="flex flex-col md:flex-row md:items-center md:justify-between mb-4 space-y-3 md:space-y-0">
@@ -278,7 +275,6 @@ export default function ElectionsPage() {
                 </div>
             </div>
 
-            {/* Modal overlay outside main container */}
             {modalOpen && (
                 <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
                     <div className="bg-white w-full max-w-2xl rounded-lg shadow-lg p-6 relative">
@@ -297,7 +293,6 @@ export default function ElectionsPage() {
                         </p>
 
                         <form onSubmit={handleCreateOrEdit} className="space-y-4">
-                            {/* Title */}
                             <div className="space-y-2">
                                 <label htmlFor="title" className="text-sm text-gray-600">
                                     Election Title
@@ -313,7 +308,6 @@ export default function ElectionsPage() {
                                 />
                             </div>
 
-                            {/* Description */}
                             <div className="space-y-2">
                                 <label htmlFor="description" className="text-sm text-gray-600">
                                     Description
@@ -329,7 +323,6 @@ export default function ElectionsPage() {
                                 />
                             </div>
 
-                            {/* Start and End Date */}
                             <div className="grid gap-4 md:grid-cols-2">
                                 <div className="space-y-2">
                                     <label htmlFor="startDate" className="text-sm text-gray-600">
@@ -359,7 +352,6 @@ export default function ElectionsPage() {
                                 </div>
                             </div>
 
-                            {/* Buttons */}
                             <div className="flex justify-end space-x-2 pt-2">
                                 <button
                                     type="button"

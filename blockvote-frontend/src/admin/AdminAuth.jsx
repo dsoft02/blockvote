@@ -44,7 +44,7 @@ export function AdminProvider({children}) {
                         }
                     }
                 } else {
-                    toast("🧱 No MetaMask detected, using local RPC...");
+                    toast("No MetaMask detected, using local RPC...");
                     setProvider(new ethers.JsonRpcProvider("http://127.0.0.1:8545"));
                 }
             } catch (err) {
@@ -57,7 +57,6 @@ export function AdminProvider({children}) {
         init();
     }, []);
 
-    // Contract instance
     useEffect(() => {
         if (!contractAddress || !provider) return;
 
@@ -66,7 +65,6 @@ export function AdminProvider({children}) {
         setContract(c);
     }, [provider, signer, contractAddress]);
 
-    // 🔐 Verify if connected account is contract owner
     useEffect(() => {
         let cancelled = false;
 
@@ -92,7 +90,7 @@ export function AdminProvider({children}) {
                     console.log("🔍 Owner check:", {adminAddr, account, match});
 
                     if (!match) {
-                        toast.error("Access denied ❌ Only the contract owner can access this dashboard");
+                        toast.error("Access denied Only the contract owner can access this dashboard");
                     }
                 }
             } catch (err) {
@@ -113,10 +111,9 @@ export function AdminProvider({children}) {
     }, [account, contract]);
 
 
-    // 🔗 Connect wallet
     async function connectWallet() {
         if (!window.ethereum) {
-            toast.error("MetaMask is required 🦊");
+            toast.error("MetaMask is required");
             return;
         }
         try {
@@ -132,7 +129,7 @@ export function AdminProvider({children}) {
             setContract(c);
 
             localStorage.setItem("connectedAccount", addr);
-            toast.success("Wallet connected ✅");
+            toast.success("Wallet connected");
         } catch (err) {
             console.error("Wallet connection error:", err);
             if (err.code === 4001) toast.error("Connection rejected by user");
@@ -148,10 +145,9 @@ export function AdminProvider({children}) {
         setContract(null);
         setProvider(null);
         localStorage.removeItem("connectedAccount");
-        toast("Disconnected wallet 👋");
+        toast("Disconnected wallet");
     }
 
-    // 🧠 Auto-handle account / chain changes
     useEffect(() => {
         if (!window.ethereum) return;
 
@@ -191,7 +187,6 @@ export function AdminProvider({children}) {
     return <AdminContext.Provider value={value}>{children}</AdminContext.Provider>;
 }
 
-// 🧭 Protect admin-only routes
 export function AdminProtected({children}) {
     const {isOwner, loadingAuth, account} = useAdmin();
 
@@ -207,7 +202,7 @@ export function AdminProtected({children}) {
     if (!isOwner) {
         return (
             <div className="p-6 bg-white rounded shadow text-center text-red-500">
-                ❌ Access denied — connected account is not the contract owner.
+                Access denied — connected account is not the contract owner.
             </div>
         );
     }

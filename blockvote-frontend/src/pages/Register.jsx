@@ -18,7 +18,7 @@ export default function Register() {
         if (!contract || !account) {
             setAlert({
                 type: "error",
-                message: "Please connect your wallet before registering ⚠️",
+                message: "Please connect your wallet before registering",
             });
             toast.error("Please connect your wallet first.");
             return;
@@ -33,10 +33,10 @@ export default function Register() {
             setLoading(true);
             const tx = await contract.registerVoter(name, matricNo);
             await tx.wait();
-            toast.success("Registration submitted. Waiting for admin verification ✅");
+            toast.success("Registration submitted. Waiting for admin verification");
             setAlert({
                 type: "success",
-                message: "Registration successful! Waiting for admin verification ✅",
+                message: "Registration successful! Waiting for admin verification",
             });
 
             setName("");
@@ -47,7 +47,7 @@ export default function Register() {
             toast.error(errorMsg);
             setAlert({
                 type: "error",
-                message: errorMsg || "Something went wrong during registration ❌",
+                message: errorMsg || "Something went wrong during registration",
             });
         } finally {
             setLoading(false);
@@ -56,7 +56,6 @@ export default function Register() {
 
     return (
         <div className="min-h-screen flex flex-col justify-center items-center bg-gray-50 px-4">
-            {/* Back to Home */}
             <div className="w-full max-w-md mb-4 text-left">
                 <a
                     href="/"
@@ -67,14 +66,12 @@ export default function Register() {
                 </a>
             </div>
 
-            {/* Registration Card */}
             <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
                 <h1 className="text-2xl font-bold mb-6 text-center">Voter Registration</h1>
 
-                {/* Wallet not connected warning */}
                 {!account && (
                     <div className="mb-4 p-3 rounded-md text-sm bg-yellow-50 text-yellow-700 border border-yellow-200">
-                        ⚠️ Wallet not connected.
+                        Wallet not connected.
                         <button
                             onClick={connectWallet}
                             disabled={isConnecting}
@@ -85,7 +82,6 @@ export default function Register() {
                     </div>
                 )}
 
-                {/* Inline Alerts */}
                 {alert.message && (
                     <div
                         className={`mb-4 p-3 rounded-md text-sm font-medium ${

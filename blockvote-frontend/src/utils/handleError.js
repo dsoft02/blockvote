@@ -2,7 +2,6 @@
 export function handleError(err) {
     console.error("⚠️ Ethers Error:", err);
 
-    // --- 1️⃣ User rejected MetaMask request ---
     if (err.code === 4001 || err.code === "ACTION_REJECTED") {
         return "User rejected the wallet request";
     }
@@ -11,7 +10,6 @@ export function handleError(err) {
         return "User rejected the request";
     }
 
-    // --- 2️⃣ MetaMask Circuit Breaker / RPC Flood ---
     if (
         err.message?.includes("Execution prevented because the circuit breaker is open") ||
         err.data?.cause?.isBrokenCircuitError
@@ -19,12 +17,10 @@ export function handleError(err) {
         return "⚡ MetaMask temporarily blocked RPC requests. Please wait a few seconds and try again.";
     }
 
-    // --- 3️⃣ MetaMask connection already pending ---
     if (err.code === -32002) {
         return "⚙️ A wallet connection request is already pending. Open MetaMask to continue.";
     }
 
-    // --- 4️⃣ Contract revert errors ---
     if (err.reason) {
         return err.reason;
     }
@@ -37,7 +33,6 @@ export function handleError(err) {
         return "Transaction failed: contract conditions not met";
     }
 
-    // --- 5️⃣ Network / Provider issues ---
     if (err.message?.includes("network changed")) {
         return "Network changed. Please reconnect your wallet";
     }
@@ -46,12 +41,10 @@ export function handleError(err) {
         return "Unable to reach blockchain RPC. Check your Hardhat node or internet connection";
     }
 
-    // --- 6️⃣ Insufficient funds ---
     if (err.message?.includes("insufficient funds")) {
         return "Insufficient funds in your wallet";
     }
 
-    // --- 7️⃣ Fallback for unknown errors ---
     if (typeof err === "string") {
         return err;
     }

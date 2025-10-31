@@ -11,7 +11,7 @@ export default function SettingsPage() {
         e.preventDefault();
         if (!addr || addr.length < 10) return setStatus("⚠️ Enter a valid address");
         setContractAddress(addr);
-        setStatus("✅ Contract address updated successfully.");
+        setStatus("Contract address updated successfully.");
     }
 
     return (

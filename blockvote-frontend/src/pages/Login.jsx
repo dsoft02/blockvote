@@ -20,7 +20,7 @@ export default function Login() {
         if (!contract || !account) {
             setAlert({
                 type: "error",
-                message: "Please connect your wallet before logging in ⚠️",
+                message: "Please connect your wallet before logging in",
             });
             toast.error("Please connect your wallet first.");
             return;
@@ -48,10 +48,10 @@ export default function Login() {
                 toast.error(msg);
                 setAlert({type: "error", message: msg});
             } else {
-                toast.success("Login successful ✅");
+                toast.success("Login successful");
                 setAlert({
                     type: "success",
-                    message: "Login successful ✅ Redirecting...",
+                    message: "Login successful Redirecting...",
                 });
                 setTimeout(() => navigate("/voting"), 1500);
             }
@@ -61,7 +61,7 @@ export default function Login() {
             toast.error(errorMsg);
             setAlert({
                 type: "error",
-                message: errorMsg || "Login failed ❌",
+                message: errorMsg || "Login failed",
             });
         } finally {
             setLoading(false);
@@ -70,7 +70,6 @@ export default function Login() {
 
     return (
         <div className="min-h-screen flex flex-col justify-center items-center bg-gray-50 px-4">
-            {/* Back to Home */}
             <div className="w-full max-w-md mb-4 text-left">
                 <a
                     href="/"
@@ -81,14 +80,12 @@ export default function Login() {
                 </a>
             </div>
 
-            {/* Login Card */}
             <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
                 <h1 className="text-2xl font-bold mb-6 text-center">Voter Login</h1>
 
-                {/* Wallet not connected warning */}
                 {!account && (
                     <div className="mb-4 p-3 rounded-md text-sm bg-yellow-50 text-yellow-700 border border-yellow-200">
-                        ⚠️ Wallet not connected.
+                        Wallet not connected.
                         <button
                             onClick={connectWallet}
                             disabled={isConnecting}
@@ -99,7 +96,6 @@ export default function Login() {
                     </div>
                 )}
 
-                {/* Inline Alerts */}
                 {alert.message && (
                     <div
                         className={`mb-4 p-3 rounded-md text-sm font-medium ${

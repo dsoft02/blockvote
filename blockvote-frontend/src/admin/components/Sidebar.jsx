@@ -20,7 +20,6 @@ export default function Sidebar({open, onClose}) {
 
     return (
         <>
-            {/* Mobile Overlay */}
             {open && (
                 <div
                     onClick={onClose}
