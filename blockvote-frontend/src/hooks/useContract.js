@@ -84,7 +84,7 @@ export default function useContract() {
 
                 try {
                     const voter = await c.voters(addr);
-                    if (!voter.isRegistered) {
+                    if (!voter.matricNo || voter.matricNo.length === 0) {
                         console.warn("User is not a registered voter anymore. Skipping reconnect.");
                         return;
                     }
