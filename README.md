@@ -1,6 +1,5 @@
 # 🗳️ BlockVote — Blockchain Voting System
 
-A Final Year Project by **BOLU OMOLOLA (FPA/CS/23/3-0123)**  
 A decentralized voting system built with **Ethereum**, **Hardhat**, **React**, and **Tailwind CSS**.
 
 ![Solidity](https://img.shields.io/badge/Solidity-%5E0.8.0-blue)
