@@ -72,6 +72,22 @@ contract ElectionManager {
         admin = msg.sender;
     }
 
+    // ------------------------
+    // Helper: Upper case conversion
+    // ------------------------
+    function _toUpper(string memory str) internal pure returns (string memory) {
+        bytes memory bStr = bytes(str);
+        bytes memory bUpper = new bytes(bStr.length);
+        for (uint i = 0; i < bStr.length; i++) {
+            if ((uint8(bStr[i]) >= 97) && (uint8(bStr[i]) <= 122)) {
+                bUpper[i] = bytes1(uint8(bStr[i]) - 32);
+            } else {
+                bUpper[i] = bStr[i];
+            }
+        }
+        return string(bUpper);
+    }
+
     // ========================
     // ADMIN FUNCTIONS
     // ========================
@@ -186,21 +202,24 @@ contract ElectionManager {
     function registerVoter(string memory _name, string memory _matricNo) public {
         require(bytes(_name).length > 0, "Name required");
         require(bytes(_matricNo).length > 0, "Matric number required");
-        require(matricToWallet[_matricNo] == address(0), "Matric number already registered");
+
+        string memory matricUpper = _toUpper(_matricNo);
+
+        require(matricToWallet[matricUpper] == address(0), "Matric number already registered");
         require(bytes(voters[msg.sender].matricNo).length == 0, "Already registered");
 
         voters[msg.sender] = Voter({
             name: _name,
-            matricNo: _matricNo,
+            matricNo: matricUpper,
             wallet: msg.sender,
             isVerified: false,
             hasVoted: false
         });
-        matricToWallet[_matricNo] = msg.sender;
+        matricToWallet[matricUpper] = msg.sender;
         voterAddresses.push(msg.sender);
         voterCount++;
 
-        emit VoterRegistered(msg.sender, _matricNo);
+        emit VoterRegistered(msg.sender, matricUpper);
     }
 
     function vote(uint _electionId, uint _candidateId)
@@ -279,7 +298,7 @@ contract ElectionManager {
         for (uint i = 1; i <= e.candidateCount; i++) {
             list[i - 1] = e.candidates[i];
         }
-        bool locked = block.timestamp >= e.startTime && block.timestamp <= e.endTime || block.timestamp > e.endTime;
+        bool locked = (block.timestamp >= e.startTime && block.timestamp <= e.endTime) || block.timestamp > e.endTime;
         return (list, locked);
     }
 
